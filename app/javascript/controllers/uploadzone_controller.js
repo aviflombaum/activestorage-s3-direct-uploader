@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { DirectUpload } from "@rails/activestorage";
 
 export default class extends Controller {
   static targets = ["fileInput"];
@@ -24,6 +25,17 @@ export default class extends Controller {
   acceptFiles(event) {
     event.preventDefault();
     const files = event.dataTransfer ? event.dataTransfer.files : event.target.files;
-    debugger;
+    [...files].forEach(this.uploadFile);
+  }
+
+  uploadFile(file) {
+    const upload = new DirectUpload(file, "/rails/active_storage/direct_uploads");
+    upload.create((error, blob) => {
+      if (error) {
+        // Handle the error
+      } else {
+        debugger;
+      }
+    });
   }
 }
