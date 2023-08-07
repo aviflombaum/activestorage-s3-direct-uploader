@@ -1,0 +1,15 @@
+<div class="w-full">
+  <div class="p-6">
+    <div id="uploadzone" data-controller="uploads">
+      <button
+        id="dropzone_button"
+        data-action="click->uploads#activateDropzone"
+        class="w-full rounded-lg bg-muted border-2 border-dashed border-gray-300 p-8 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+        <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto h-12 w-12 text-gray-400"><path d="M17.5 22h.5c.5 0 1-.2 1.4-.6.4-.4.6-.9.6-1.4V7.5L14.5 2H6c-.5 0-1 .2-1.4.6C4.2 3 4 3.5 4 4v3"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M10 20v-1a2 2 0 1 1 4 0v1a2 2 0 1 1-4 0Z"></path><path d="M6 20v-1a2 2 0 1 0-4 0v1a2 2 0 1 0 4 0Z"></path><path d="M2 19v-3a6 6 0 0 1 12 0v3"></path></svg>
+        <span class="mt-2 block text-sm font-semibold text-gray-900 dark:text-white">Drag Tracks to Upload or Click Here</span>
+      </button>
+    </div>
+  </div>
+  <div id="uploads" class="flex flex-col overflow-y-scroll divide-y border h-[calc(100vh-18em)]">
+  </div>
+</div>
