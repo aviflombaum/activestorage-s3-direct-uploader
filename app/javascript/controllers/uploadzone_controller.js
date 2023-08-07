@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import { DirectUpload } from "@rails/activestorage";
+import { post } from "@rails/request.js";
 
 export default class extends Controller {
   static targets = ["fileInput"];
@@ -34,7 +35,13 @@ export default class extends Controller {
       if (error) {
         // Handle the error
       } else {
-        debugger;
+        const trackData = { track: { filename: blob.filename }, signed_blob_id: blob.signed_id };
+
+        post("/tracks", {
+          body: trackData,
+          contentType: "application/json",
+          responseKind: "json",
+        });
       }
     });
   }
