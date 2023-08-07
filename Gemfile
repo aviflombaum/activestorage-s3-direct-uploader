@@ -74,3 +74,5 @@ group :development do
 end
 
 gem "shadcn-ui", github: "aviflombaum/shadcn-rails"
+
+gem "aws-sdk-s3", "~> 1.132"
