@@ -4,7 +4,7 @@ import { post } from "@rails/request.js";
 
 class Upload {
   constructor(file) {
-    this.directUpload = new DirectUpload(file, "/rails/active_storage/direct_uploads");
+    this.directUpload = new DirectUpload(file, "/rails/active_storage/direct_uploads", this);
   }
 
   process() {
@@ -44,6 +44,16 @@ class Upload {
 
     const uploadList = document.querySelector("#uploads");
     uploadList.appendChild(fileUpload);
+  }
+
+  directUploadWillStoreFileWithXHR(request) {
+    request.upload.addEventListener("progress", (event) => this.updateProgress(event));
+  }
+
+  updateProgress(event) {
+    const percentage = (event.loaded / event.total) * 100;
+    const progress = document.querySelector(`#upload_${this.directUpload.id} .progress`);
+    progress.style.transform = `translateX(-${100 - percentage}%)`;
   }
 }
 
