@@ -2,6 +2,17 @@ import { Controller } from "@hotwired/stimulus";
 import { DirectUpload } from "@rails/activestorage";
 import { post } from "@rails/request.js";
 
+class Upload {
+  constructor(file) {
+    // Here's where we will instantiate the DirectUpload instance.
+  }
+
+  process() {
+    // Here's where we will actually kick off the upload process.
+    console.log(this);
+  }
+}
+
 export default class extends Controller {
   static targets = ["fileInput"];
   connect() {
@@ -27,7 +38,7 @@ export default class extends Controller {
     event.preventDefault();
     const files = event.dataTransfer ? event.dataTransfer.files : event.target.files;
     [...files].forEach((f) => {
-      this.uploadFile(f);
+      new Upload(f).process();
     });
   }
 
