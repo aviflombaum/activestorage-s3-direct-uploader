@@ -26,7 +26,9 @@ export default class extends Controller {
   acceptFiles(event) {
     event.preventDefault();
     const files = event.dataTransfer ? event.dataTransfer.files : event.target.files;
-    [...files].forEach(this.uploadFile);
+    [...files].forEach((f) => {
+      this.uploadFile(f);
+    });
   }
 
   uploadFile(file) {
