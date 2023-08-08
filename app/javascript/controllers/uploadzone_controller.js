@@ -33,6 +33,9 @@ export default class extends Controller {
 
   uploadFile(file) {
     const upload = new DirectUpload(file, "/rails/active_storage/direct_uploads");
+
+    this.insertUpload(upload);
+
     upload.create((error, blob) => {
       if (error) {
         // Handle the error
@@ -46,5 +49,26 @@ export default class extends Controller {
         });
       }
     });
+  }
+
+  insertUpload(upload) {
+    const fileUpload = document.createElement("div");
+
+    fileUpload.id = `upload_${upload.id}`;
+    fileUpload.className = "p-3 border-b";
+
+    fileUpload.textContent = upload.file.name;
+
+    const progressWrapper = document.createElement("div");
+    progressWrapper.className = "relative h-4 overflow-hidden rounded-full bg-secondary w-[100%]";
+    fileUpload.appendChild(progressWrapper);
+
+    const progressBar = document.createElement("div");
+    progressBar.className = "progress h-full w-full flex-1 bg-primary";
+    progressBar.style = "transform: translateX(-100%);";
+    progressWrapper.appendChild(progressBar);
+
+    const uploadList = document.querySelector("#uploads");
+    uploadList.appendChild(fileUpload);
   }
 }
