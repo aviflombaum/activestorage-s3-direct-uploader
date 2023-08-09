@@ -10,19 +10,43 @@ class Upload {
   process() {
     this.insertUpload();
 
-    this.directUpload.create((error, blob) => {
+    this.directUpload.create(async (error, blob) => {
       if (error) {
         // Handle the error
       } else {
         const trackData = { track: { filename: blob.filename }, signed_blob_id: blob.signed_id };
 
-        post("/tracks", {
+        const trackResponse = await post("/tracks", {
           body: trackData,
           contentType: "application/json",
           responseKind: "json",
         });
+
+        if (trackResponse.ok) {
+          const trackJSON = await trackResponse.json;
+
+          this.insertAudio(trackJSON.audio_url);
+        }
       }
     });
+  }
+
+  insertAudio(audioURL) {
+    const progressBarDiv = document.querySelector(`#upload_${this.directUpload.id} .progress`);
+
+    // Create audio element
+    const audio = document.createElement("audio");
+    audio.controls = true;
+    audio.src = audioURL;
+    audio.classList.add("w-full");
+
+    // Make the parent progressWrapper div taller
+    progressBarDiv.parentElement.classList.add("h-14");
+    progressBarDiv.parentElement.classList.remove("h-4");
+
+    // Insert the audio tag and remove the progress bar.
+    progressBarDiv.parentElement.appendChild(audio);
+    progressBarDiv.remove();
   }
 
   insertUpload() {

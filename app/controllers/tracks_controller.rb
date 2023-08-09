@@ -6,7 +6,10 @@ class TracksController < ApplicationController
     @track = Track.new(track_params)
     @track.audio_file.attach(params[:signed_blob_id])
     if @track.save
-      render json: @track, status: :created
+      render json: {
+        track: @track,
+        audio_url: @track.audio_file.url
+      }, status: :created
     end
   end
 
