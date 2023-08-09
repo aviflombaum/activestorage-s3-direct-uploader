@@ -10,43 +10,43 @@ class Upload {
   process() {
     this.insertUpload();
 
-    this.directUpload.create(async (error, blob) => {
-      if (error) {
-        // Handle the error
-      } else {
-        const trackData = { track: { filename: blob.filename }, signed_blob_id: blob.signed_id };
-
-        const trackResponse = await post("/tracks", {
-          body: trackData,
-          contentType: "application/json",
-          responseKind: "json",
-        });
-
-        if (trackResponse.ok) {
-          const trackJSON = await trackResponse.json;
-
-          this.insertAudio(trackJSON.audio_url);
-        }
-      }
-    });
+    this.directUpload.create((error, blob) => this.createTrack(error, blob));
   }
 
-  insertAudio(audioURL) {
-    const progressBarDiv = document.querySelector(`#upload_${this.directUpload.id} .progress`);
+  async createTrack(error, blob) {
+    if (error) {
+      // Handle the error
+    } else {
+      const trackData = { track: { filename: blob.filename }, signed_blob_id: blob.signed_id };
 
+      const trackResponse = await post("/tracks", {
+        body: trackData,
+        contentType: "application/json",
+        responseKind: "json",
+      });
+
+      if (trackResponse.ok) {
+        this.trackJSON = await trackResponse.json;
+
+        this.insertAudio();
+      }
+    }
+  }
+
+  insertAudio() {
     // Create audio element
     const audio = document.createElement("audio");
     audio.controls = true;
-    audio.src = audioURL;
+    audio.src = this.trackJSON.audio_url;
     audio.classList.add("w-full");
 
     // Make the parent progressWrapper div taller
-    progressBarDiv.parentElement.classList.add("h-14");
-    progressBarDiv.parentElement.classList.remove("h-4");
+    this.progressBar.parentElement.classList.add("h-14");
+    this.progressBar.parentElement.classList.remove("h-4");
 
     // Insert the audio tag and remove the progress bar.
-    progressBarDiv.parentElement.appendChild(audio);
-    progressBarDiv.remove();
+    this.progressBar.parentElement.appendChild(audio);
+    this.progressBar.remove();
   }
 
   insertUpload() {
@@ -61,10 +61,10 @@ class Upload {
     progressWrapper.className = "relative h-4 overflow-hidden rounded-full bg-secondary w-[100%]";
     fileUpload.appendChild(progressWrapper);
 
-    const progressBar = document.createElement("div");
-    progressBar.className = "progress h-full w-full flex-1 bg-primary";
-    progressBar.style = "transform: translateX(-100%);";
-    progressWrapper.appendChild(progressBar);
+    this.progressBar = document.createElement("div");
+    this.progressBar.className = "progress h-full w-full flex-1 bg-primary";
+    this.progressBar.style = "transform: translateX(-100%);";
+    progressWrapper.appendChild(this.progressBar);
 
     const uploadList = document.querySelector("#uploads");
     uploadList.appendChild(fileUpload);
